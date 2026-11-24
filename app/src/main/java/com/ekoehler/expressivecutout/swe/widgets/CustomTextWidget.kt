@@ -249,7 +249,8 @@ data class CustomTextWidget(
         private const val TAG = "customText"
 
         /** The text a new widget shows, and the fallback when stored JSON has no `"body"`. */
-        private const val DEFAULT_BODY: String = "Hello world!"
+        private val DEFAULT_BODY: String
+            get() = if (java.util.Locale.getDefault().language == "zh") "你好，世界！" else "Hello world!"
         private val DEFAULT_TEXT_COLOR: CutoutColor = CutoutColor.Solid(0xFFFFFFFF)
         private const val DEFAULT_WEIGHT: Int = 400
         private const val DEFAULT_WIDTH: Float = 100f

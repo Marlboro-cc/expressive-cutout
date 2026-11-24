@@ -5,6 +5,8 @@ import android.app.KeyguardManager
 import android.app.PendingIntent
 import android.app.RemoteInput
 import android.content.BroadcastReceiver
+import com.ekoehler.expressivecutout.system.AppLocale
+import com.ekoehler.expressivecutout.system.LocalizedOverlayContent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -351,9 +353,9 @@ class IslandOverlayController(private val context: Context) {
         IslandEvent(
             id = -1L,
             icon = IslandIcon.Vector(Icons.Rounded.Tune),
-            label = context.getString(R.string.preview_label),
-            detail = context.getString(R.string.preview_detail),
-            appName = context.getString(R.string.app_name),
+            label = AppLocale.localizedContext(context).getString(R.string.preview_label),
+            detail = AppLocale.localizedContext(context).getString(R.string.preview_detail),
+            appName = AppLocale.localizedContext(context).getString(R.string.app_name),
             postTimeMs = System.currentTimeMillis(),
             accent = Color(0xFF60A5FA),
             appColor = Color(0xFF60A5FA),
@@ -740,6 +742,7 @@ class IslandOverlayController(private val context: Context) {
                     behaviour.horizontalCutoutMode == HorizontalCutoutMode.STICK_TO_CAMERA
                 val rot270 = rotation == Surface.ROTATION_270
 
+                LocalizedOverlayContent {
                 ExpressiveCutoutTheme {
                     DynamicIsland(
                         event = event,
@@ -810,6 +813,7 @@ class IslandOverlayController(private val context: Context) {
                         onDismiss = ::onDismiss,
                         onPinToggle = ::onPinToggle,
                     )
+                }
                 }
             }
         }
@@ -936,7 +940,7 @@ class IslandOverlayController(private val context: Context) {
         scope.launch(Dispatchers.IO) {
             if (!HotspotClients.stopHotspot()) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, R.string.hotspot_turn_off_failed, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(AppLocale.localizedContext(context), R.string.hotspot_turn_off_failed, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -1291,7 +1295,7 @@ class IslandOverlayController(private val context: Context) {
                 currentEvent.value = currentEvent.value?.copy(
                     actions = resolver.timerActions(timer.actions),
                     label = timer.label?.takeIf { it.isNotBlank() }
-                        ?: context.getString(DynamicTile.TIMER.labelRes),
+                        ?: AppLocale.localizedContext(context).getString(DynamicTile.TIMER.labelRes),
                 )
                 lastTimerEvent = currentEvent.value
             }

@@ -61,7 +61,9 @@ internal data class Release(
  * typo while filling the file in only costs the changelog its content.
  */
 internal fun loadReleases(context: Context): List<Release> = runCatching {
-    val text = context.assets.open(ChangelogAsset).bufferedReader().use { it.readText() }
+    val asset = if (context.resources.configuration.locales[0].language == "zh")
+        "changelog-zh-Hans.json" else ChangelogAsset
+    val text = context.assets.open(asset).bufferedReader().use { it.readText() }
     val entries = JSONArray(text)
     List(entries.length()) { index ->
         val entry = entries.getJSONObject(index)

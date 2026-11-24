@@ -3012,10 +3012,14 @@ fun formatNotificationHeader(
 @Composable
 fun rememberRelativeTime(postTimeMs: Long?): String? {
     if (postTimeMs == null) return null
-    val relativeTime by produceState(initialValue = formatRelativeTime(postTimeMs), key1 = postTimeMs) {
+    val context = LocalContext.current
+    val relativeTime by produceState(
+        initialValue = NotificationHeaderResolver.formatLocalizedRelativeTime(context, postTimeMs),
+        key1 = postTimeMs, key2 = context.resources.configuration,
+    ) {
         while (true) {
             delay(1_000L)
-            value = formatRelativeTime(postTimeMs)
+            value = NotificationHeaderResolver.formatLocalizedRelativeTime(context, postTimeMs)
         }
     }
     return relativeTime
@@ -3724,7 +3728,7 @@ private fun SegmentedReplyRow(
         val cancel = @Composable { shape: Shape ->
             ReplySegmentButton(
                 icon = Icons.Rounded.Close,
-                contentDescription = "Cancel reply",
+                contentDescription = stringResource(R.string.localized_text_45),
                 container = LocalContentColor.current.copy(alpha = 0.12f),
                 content = cancelColor ?: LocalContentColor.current.copy(alpha = 0.7f),
                 shape = shape,
@@ -3749,7 +3753,7 @@ private fun SegmentedReplyRow(
         val sendEnabled = text.isNotBlank()
         ReplySegmentButton(
             icon = Icons.AutoMirrored.Rounded.Send,
-            contentDescription = "Send reply",
+            contentDescription = stringResource(R.string.localized_text_46),
             container = if (sendEnabled) sendColor else LocalContentColor.current.copy(alpha = 0.12f),
             content = when {
                 !sendEnabled -> LocalContentColor.current.copy(alpha = 0.4f)
@@ -3855,7 +3859,7 @@ private fun ReplyCancelButton(
     ) {
         Icon(
             imageVector = Icons.Rounded.Close,
-            contentDescription = "Cancel reply",
+            contentDescription = stringResource(R.string.localized_text_45),
             tint = cancelColor ?: LocalContentColor.current.copy(alpha = 0.7f),
             modifier = Modifier.size(24.dp),
         )
@@ -3886,7 +3890,7 @@ private fun ReplySendButton(
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Rounded.Send,
-            contentDescription = "Send reply",
+            contentDescription = stringResource(R.string.localized_text_46),
             modifier = Modifier.size(22.dp),
         )
     }
@@ -4688,7 +4692,7 @@ private fun CallSingleRowContent(
                     val fill = call.incomingAnswerColor.resolve()
                     CallCircleButton(
                         icon = Icons.Rounded.Call,
-                        description = "Answer",
+                        description = stringResource(R.string.cd_answer_call),
                         container = fill,
                         content = if (fill.luminance() > 0.5f) PILL_TEXT_COLOR_DARK else PILL_TEXT_COLOR,
                         onClick = { onAction(answer) },
@@ -4698,7 +4702,7 @@ private fun CallSingleRowContent(
                     val fill = call.incomingHangUpColor.resolve()
                     CallCircleButton(
                         icon = Icons.Rounded.CallEnd,
-                        description = "Decline",
+                        description = stringResource(R.string.cd_decline_call),
                         container = fill,
                         content = if (fill.luminance() > 0.5f) PILL_TEXT_COLOR_DARK else PILL_TEXT_COLOR,
                         onClick = { onAction(hangUp) },
@@ -4708,7 +4712,7 @@ private fun CallSingleRowContent(
                 val fill = call.hangUpColor.resolve()
                 CallCircleButton(
                     icon = Icons.Rounded.CallEnd,
-                    description = "Hang up",
+                    description = stringResource(R.string.localized_text_47),
                     container = fill,
                     content = if (fill.luminance() > 0.5f) PILL_TEXT_COLOR_DARK else PILL_TEXT_COLOR,
                     onClick = { onAction(hangUp) },
